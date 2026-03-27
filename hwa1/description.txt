@@ -1,0 +1,10 @@
+Olgu massiivis juhuslikult läbisegi punased, rohelised ja sinised pallid. Koostage võimalikult kiire meetod, mis järjestaks massiivi ümber nii, et kõik punased pallid oleksid massiivi alguses ja kõik sinised pallid lõpus (rohelised vastavalt keskel).
+
+
+An array contains red, green and blue balls in random order. Write a possibly fast method to rearrange the array, so that all red balls are at the beginning and all blue balls are at the end of the array (green balls in the middle).
+
+
+enum Color {red, green, blue};
+
+public static void reorder (Color[] balls)
+

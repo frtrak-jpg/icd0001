@@ -1,0 +1,8 @@
+Write a Java program to sort an array of double numbers using binary insertion sort method. Binary insertion method is a modified insertion method that uses binary search to find the insertion point.
+
+
+Koostada Java meetod, mis järjestab etteantud reaalarvude (double) massiivi kahendpistemeetodil (s.t. pistemeetodil, mille korral pistekoht leitakse kahendotsimise abil).
+
+
+public static void binaryInsertionSort (double[] a)
+
