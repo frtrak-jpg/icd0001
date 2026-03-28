@@ -53,7 +53,7 @@ public class ColorSortTest {
             gCount++;
          }  
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Result incorrect", check (balls, rCount, gCount, bCount));
     }
 
@@ -74,14 +74,14 @@ public class ColorSortTest {
          balls[0] = ColorSort.Color.green;
          gCount++;
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("One element array not working", 
          check (balls, rCount, gCount, bCount));
       balls = new ColorSort.Color [0];
       rCount = 0;
       gCount = 0;
       bCount = 0;
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Zero element array not working", 
          check (balls, rCount, gCount, bCount));
       balls = new ColorSort.Color [100000];
@@ -101,7 +101,7 @@ public class ColorSortTest {
             gCount++;
          }
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Result incorrect", check (balls, rCount, gCount, bCount));
     }
 
@@ -115,7 +115,7 @@ public class ColorSortTest {
       for (int i=0; i < len; i++) {
             balls[i] = ColorSort.Color.red;
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Result incorrect for all red", 
          check (balls, rCount, gCount, bCount));
       balls = new ColorSort.Color [100000];
@@ -135,7 +135,7 @@ public class ColorSortTest {
             gCount++;
          }
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Result incorrect", check (balls, rCount, gCount, bCount));
     }
 
@@ -149,7 +149,7 @@ public class ColorSortTest {
       for (int i=0; i < len; i++) {
             balls[i] = ColorSort.Color.green;
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Result incorrect for all green", 
          check (balls, rCount, gCount, bCount));
       balls = new ColorSort.Color [100000];
@@ -169,7 +169,7 @@ public class ColorSortTest {
             gCount++;
          }
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Result incorrect", check (balls, rCount, gCount, bCount));
     }
 
@@ -183,7 +183,7 @@ public class ColorSortTest {
       for (int i=0; i < len; i++) {
             balls[i] = ColorSort.Color.blue;
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Result incorrect for all blue",
          check (balls, rCount, gCount, bCount));
       balls = new ColorSort.Color [100000];
@@ -203,7 +203,7 @@ public class ColorSortTest {
             gCount++;
          }
       }
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       assertTrue ("Result incorrect", check (balls, rCount, gCount, bCount));
     }
 
@@ -227,7 +227,7 @@ public class ColorSortTest {
          }
       }
       long t0 = System.currentTimeMillis();
-      ColorSort.sortBallsRedGreenBlue (balls);
+      ColorSort.sortBalls (balls);
       long t1 = System.currentTimeMillis();
       int delta = (int)(t1-t0);
       assertTrue ("Result incorrect", check (balls, rCount, gCount, bCount));

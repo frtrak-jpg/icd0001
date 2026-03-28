@@ -8,9 +8,12 @@ public class ColorSort {
    public static void main (String[] param) {
       // for debugging
    }
-   
-   // sort balls red to left, green in the middle, blue to the right
-   public static void sortBallsRedGreenBlue (Color[] balls) {
+
+   /**
+    * Sort balls red to left, green in the middle, blue to the right with the DNF method in a single pass
+    * @param balls
+    */
+   public static void sortBalls (Color[] balls) {
 
       int low = 0;
       int mid = 0;
@@ -30,6 +33,7 @@ public class ColorSort {
             mid++;
 
          } else {
+
             Color temp = balls[high];
             balls[high] = balls[mid];
             balls[mid] = temp;
