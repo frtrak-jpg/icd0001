@@ -1,4 +1,3 @@
-
 import java.util.*;
 
 /*
@@ -18,41 +17,7 @@ import java.util.*;
  * @since 1.8
  */
 public class DoubleSorting {
-   /**
-    * Recursive binary insertion sort.
-    * 
-    * @param a array to be sorted
-    */
-   public static void binaryInsertionSortRecursive(double[] a) {
-      if (a == null || a.length < 2)
-         return;
-      binaryInsertionSortRecursiveHelper(a, a.length, 1);
-   }
-
-   // Helper for recursive binary insertion sort
-   private static void binaryInsertionSortRecursiveHelper(double[] a, int n, int i) {
-      if (i >= n)
-         return;
-      double value = a[i];
-      int pos = binarySearchRecursive(a, value, 0, i - 1);
-      if (pos < i) {
-         System.arraycopy(a, pos, a, pos + 1, i - pos);
-      }
-      a[pos] = value;
-      binaryInsertionSortRecursiveHelper(a, n, i + 1);
-   }
-
-   // Recursive binary search for insertion position
-   private static int binarySearchRecursive(double[] a, double value, int left, int right) {
-      if (left > right)
-         return left;
-      int mid = left + (right - left) / 2;
-      if (a[mid] <= value) {
-         return binarySearchRecursive(a, value, mid + 1, right);
-      } else {
-         return binarySearchRecursive(a, value, left, mid - 1);
-      }
-   }
+  
 
    /** maximal array length */
    static final int MAX_SIZE = 512000;
@@ -100,7 +65,6 @@ public class DoubleSorting {
 
          acopy = Arrays.copyOf(origArray, rightLimit);
          stime = System.nanoTime();
-         binaryInsertionSortRecursive(acopy);
          ftime = System.nanoTime();
          diff = ftime - stime;
          System.out.printf("%34s%11d%n", "Recursive binary insertion sort: time (ms): ", diff / 1000000);
@@ -149,6 +113,38 @@ public class DoubleSorting {
             a[j + 1] = a[j];
          }
          a[j + 1] = b;
+      }
+   }
+
+      /**
+    * Binary insertion sort with inline binary search in the loop.
+    *
+    * @param a array to be sorted
+    */
+   public static void binaryInsertionSortInlineBinarySearch(double[] a) {
+      if (a == null || a.length < 2)
+         return;
+
+      for (int i = 1; i < a.length; i++) {
+         double value = a[i];
+         int left = 0;
+         int right = i - 1;
+         // Inline binary search for insertion point
+         while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (a[mid] <= value) {
+               left = mid + 1;
+            } else {
+               right = mid;
+            }
+         }
+         if (a[left] <= value) {
+            left++;
+         }
+         if (left < i) {
+            System.arraycopy(a, left, a, left + 1, i - left);
+         }
+         a[left] = value;
       }
    }
 
