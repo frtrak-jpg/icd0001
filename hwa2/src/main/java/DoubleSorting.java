@@ -65,10 +65,12 @@ public class DoubleSorting {
 
          acopy = Arrays.copyOf(origArray, rightLimit);
          stime = System.nanoTime();
+         binaryInsertionSortWithJava(acopy);
          ftime = System.nanoTime();
          diff = ftime - stime;
-         System.out.printf("%34s%11d%n", "Recursive binary insertion sort: time (ms): ", diff / 1000000);
+         System.out.printf("%34s%11d%n", "Binary insertion sort with Java BinarySearch: time (ms): ", diff / 1000000);
          checkOrder(acopy);
+
          acopy = Arrays.copyOf(origArray, rightLimit);
          stime = System.nanoTime();
          mergeSort(acopy, 0, acopy.length);
@@ -115,7 +117,7 @@ public class DoubleSorting {
          a[j + 1] = b;
       }
    }
-   
+
    /**
     * Binary insertion sort.
     * 
@@ -144,6 +146,30 @@ public class DoubleSorting {
             System.arraycopy(a, left, a, left + 1, i - left);
          }
          a[left] = value;
+      }
+   }
+
+   public static void binaryInsertionSortWithJava(double[] a) {
+      if (a == null || a.length < 2)
+         return;
+
+      for (int i = 1; i < a.length; i++) {
+         double value = a[i];
+         int position = Arrays.binarySearch(a, 0, i, value);
+
+         if (position < 0) {
+            position = -(position) - 1;
+         }
+         else {
+            while (position < i && a[position] == value) {
+               position++;
+            }
+         }
+         
+         if (position < i) {
+            System.arraycopy(a, position, a, position + 1, i - position);
+         }
+         a[position] = value;
       }
    }
 
