@@ -11,9 +11,12 @@ public class ColorSort {
 
    /**
     * Sort balls red to left, green in the middle, blue to the right with the DNF method in a single pass
-    * @param balls
+    * @param balls array of enum balls to be sorted
     */
    public static void sortBalls (Color[] balls) {
+      if (balls == null || balls.length < 2) {
+         return;
+      }
 
       int low = 0;
       int mid = 0;

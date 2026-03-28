@@ -115,39 +115,7 @@ public class DoubleSorting {
          a[j + 1] = b;
       }
    }
-
-      /**
-    * Binary insertion sort with inline binary search in the loop.
-    *
-    * @param a array to be sorted
-    */
-   public static void binaryInsertionSortInlineBinarySearch(double[] a) {
-      if (a == null || a.length < 2)
-         return;
-
-      for (int i = 1; i < a.length; i++) {
-         double value = a[i];
-         int left = 0;
-         int right = i - 1;
-         // Inline binary search for insertion point
-         while (left < right) {
-            int mid = left + (right - left) / 2;
-            if (a[mid] <= value) {
-               left = mid + 1;
-            } else {
-               right = mid;
-            }
-         }
-         if (a[left] <= value) {
-            left++;
-         }
-         if (left < i) {
-            System.arraycopy(a, left, a, left + 1, i - left);
-         }
-         a[left] = value;
-      }
-   }
-
+   
    /**
     * Binary insertion sort.
     * 
