@@ -8,6 +8,112 @@ import java.util.*;
  */
 public class LfractionTest {
 
+   @Test(timeout = 1000)
+public void testValueOfDouble_Zero() {
+    double df = 0.0;
+    Lfraction f = Lfraction.valueOf(df);
+    assertEquals("valueOf(0.0) must give 0/1",
+            Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+    assertEquals("valueOf(0.0) numerator", 0, f.getNumerator());
+    assertEquals("valueOf(0.0) denominator", 1, f.getDenominator());
+}
+
+@Test(timeout = 1000)
+public void testValueOfDouble_Eighth() {
+    double df = 0.125;
+    Lfraction f = Lfraction.valueOf(df);
+    assertEquals("valueOf(0.125) must be exact",
+            Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+    assertEquals("valueOf(0.125) must be 1/8",
+            new Lfraction(1, 8), f);
+    assertTrue("denominator must be <= 1000000000",
+            f.getDenominator() <= 1000000000L);
+}
+
+@Test(timeout = 1000)
+public void testValueOfDouble_NegativeHalf() {
+    double df = -2.5;
+    Lfraction f = Lfraction.valueOf(df);
+    assertEquals("valueOf(-2.5) must be exact",
+            Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+    assertEquals("valueOf(-2.5) must be -5/2",
+            new Lfraction(-5, 2), f);
+    assertTrue("denominator must be <= 1000000000",
+            f.getDenominator() <= 1000000000L);
+}
+
+@Test(timeout = 1000)
+public void testValueOfDouble_Pi() {
+    double df = Math.PI;
+    Lfraction f = Lfraction.valueOf(df);
+    assertEquals("valueOf(Math.PI) must be exact in double",
+            Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+    assertEquals("valueOf(Math.PI) must be 245850922/78256779",
+            new Lfraction(245850922L, 78256779L), f);
+    assertTrue("denominator must be <= 1000000000",
+            f.getDenominator() <= 1000000000L);
+}
+
+@Test(timeout = 1000)
+public void testValueOfDouble_E() {
+    double df = Math.E;
+    Lfraction f = Lfraction.valueOf(df);
+    assertEquals("valueOf(Math.E) must be exact in double",
+            Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+    assertEquals("valueOf(Math.E) must be 325368125/119696244",
+            new Lfraction(325368125L, 119696244L), f);
+    assertTrue("denominator must be <= 1000000000",
+            f.getDenominator() <= 1000000000L);
+}
+
+@Test(timeout = 1000)
+public void testValueOfDouble_Sqrt2() {
+    double df = Math.sqrt(2.);
+    Lfraction f = Lfraction.valueOf(df);
+    assertEquals("valueOf(sqrt(2)) must be exact in double",
+            Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+    assertEquals("valueOf(sqrt(2)) must be 131836323/93222358",
+            new Lfraction(131836323L, 93222358L), f);
+    assertTrue("denominator must be <= 1000000000",
+            f.getDenominator() <= 1000000000L);
+}
+
+@Test(timeout = 1000)
+public void testValueOfDouble_Integer() {
+    double df = 42.0;
+    Lfraction f = Lfraction.valueOf(df);
+    assertEquals("valueOf(42.0) must be exact in double",
+            Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+    assertEquals("valueOf(42.0) must be 42/1",
+            new Lfraction(42, 1), f);
+
+    df = -7.0;
+    f = Lfraction.valueOf(df);
+    assertEquals("valueOf(-7.0) must be exact in double",
+            Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+    assertEquals("valueOf(-7.0) must be -7/1",
+            new Lfraction(-7, 1), f);
+}
+
+@Test(timeout = 10000)
+public void testValueOfDouble_Random() {
+    java.util.Random rng = new java.util.Random(12345L);
+    for (int i = 0; i < 5; i++) {
+        double df = rng.nextDouble() * 200.0 - 100.0; // range [-100, 100)
+        Lfraction f = Lfraction.valueOf(df);
+
+        assertEquals("valueOf(" + df + ") must be exact in double, got " + f,
+                Double.doubleToLongBits(df), Double.doubleToLongBits(f.toDouble()));
+
+        assertTrue("denominator of valueOf(" + df + ") must be positive",
+                f.getDenominator() > 0);
+
+        assertTrue("denominator of valueOf(" + df + ") must be <= 1000000000, got "
+                        + f.getDenominator(),
+                f.getDenominator() <= 1000000000L);
+    }
+}
+
    @Test (timeout=1000)
    public void testPlus() { 
       Lfraction f1 = new Lfraction (2, 5);
@@ -41,6 +147,8 @@ public class LfractionTest {
       assertEquals ("Wrong sum: <" + f1 + "> + <" + f2 + ">",
          new Lfraction (0, 1), sum);
    }
+
+   
 
    @Test (timeout=1000)
    public void testTimes() {

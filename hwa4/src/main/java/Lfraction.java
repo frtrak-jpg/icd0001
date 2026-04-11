@@ -272,6 +272,59 @@ public class Lfraction implements Comparable<Lfraction> {
       return new Lfraction(n, d);
    }
 
+   public static Lfraction valueOf(double df) {
+    // Handle special cases
+    if (Double.isNaN(df) || Double.isInfinite(df)) {
+        throw new RuntimeException("cannot convert NaN or Infinity to fraction");
+    }
+
+    boolean negative = false;
+    if (df < 0) {
+        negative = true;
+        df = -df;
+    }
+
+    if (df == 0.0) {
+        return new Lfraction(0, 1);
+    }
+
+    // Continued fraction algorithm
+    long p0 = 0, q0 = 1;
+    long p1 = 1, q1 = 0;
+
+    double x = df;
+
+    while (true) {
+        long a = (long) Math.floor(x);
+
+        long p2 = a * p1 + p0;
+        long q2 = a * q1 + q0;
+
+        if (q2 != 0) {
+            Lfraction candidate = new Lfraction(negative ? -p2 : p2, q2);
+            if (candidate.toDouble() == (negative ? -df : df)) {
+                return candidate;
+            }
+        }
+
+        double remainder = x - a;
+        if (remainder == 0.0) {
+            return new Lfraction(negative ? -p2 : p2, q2);
+        }
+
+        p0 = p1;
+        q0 = q1;
+        p1 = p2;
+        q1 = q2;
+
+        x = 1.0 / remainder;
+
+        if (x > Long.MAX_VALUE / 2) {
+            return new Lfraction(negative ? -p1 : p1, q1);
+        }
+    }
+}
+
    private static long gcd(long a, long b) {
       BigInteger aa = BigInteger.valueOf(a).abs();
       BigInteger bb = BigInteger.valueOf(b).abs();
