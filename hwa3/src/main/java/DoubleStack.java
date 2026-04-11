@@ -59,6 +59,42 @@ public class DoubleStack {
       }
       push (result);
    }
+
+   public void swap() {
+      if (stack.size() < 2) {
+         throw new RuntimeException ("swap: not enough operands");
+      }
+      double b = pop();
+      double a = pop();
+      push (b);
+      push (a);
+   }
+
+   public void rot() {
+      if (stack.size() < 3) {
+         throw new RuntimeException ("rot: not enough operands");
+      }
+      double c = pop();
+      double b = pop();
+      double a = pop();
+      push (b);
+      push (c);
+      push (a);
+   }
+
+   public void dup() {
+      if (stack.isEmpty()) {
+         throw new RuntimeException ("dup: stack is empty");
+      }
+      push (tos());
+   }
+
+   public void drop() {
+      if (stack.isEmpty()) {
+         throw new RuntimeException ("drop: stack is empty");
+      }
+      pop();
+   }
   
    public double tos() {
       if (stack.isEmpty()) {
@@ -108,6 +144,8 @@ public class DoubleStack {
                   "' in expression: '" + expression + "'");
             }
             stack.op (token);
+         } else if (isStackWordToken (token)) {
+            applyStackWord (stack, token, expression);
          } else {
             try {
                double value = Double.parseDouble (token);
@@ -134,6 +172,30 @@ public class DoubleStack {
 
    private static boolean isOperatorToken (String token) {
       return token != null && token.length() == 1 && "+-*/".indexOf (token.charAt (0)) >= 0;
+   }
+
+   private static boolean isStackWordToken (String token) {
+      return "SWAP".equals (token) || "ROT".equals (token)
+         || "DUP".equals (token) || "DROP".equals (token);
+   }
+
+   private static void applyStackWord (DoubleStack stack, String token,
+      String expression) {
+      try {
+         if ("SWAP".equals (token)) {
+            stack.swap();
+         } else if ("ROT".equals (token)) {
+            stack.rot();
+         } else if ("DUP".equals (token)) {
+            stack.dup();
+         } else if ("DROP".equals (token)) {
+            stack.drop();
+         }
+      } catch (RuntimeException e) {
+         throw new RuntimeException (
+            "interpret: " + e.getMessage() + " for operation '" + token +
+            "' in expression: '" + expression + "'");
+      }
    }
 
 }

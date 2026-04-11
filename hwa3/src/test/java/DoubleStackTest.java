@@ -9,6 +9,80 @@ public class DoubleStackTest {
 
    public static double delta = 0.000000001;
 
+@Test(timeout = 1000)
+public void testInterpretStackOps() {
+    // "2. 5. SWAP -" peab tulemuseks andma 3.
+    String s = "2. 5. SWAP -";
+    assertEquals("expression: " + s, 3., DoubleStack.interpret(s), delta);
+
+    // "2. 5. 9. ROT - +" peab andma 12.
+    s = "2. 5. 9. ROT - +";
+    assertEquals("expression: " + s, 12., DoubleStack.interpret(s), delta);
+
+    // "3. DUP *" peab andma 9.
+    s = "3. DUP *";
+    assertEquals("expression: " + s, 9., DoubleStack.interpret(s), delta);
+
+    // "3. 7. DROP" peab andma 3.
+    s = "3. 7. DROP";
+    assertEquals("expression: " + s, 3., DoubleStack.interpret(s), delta);
+
+    // "9. 11. 17. ROT - SWAP -" peab andma -3.
+    s = "9. 11. 17. ROT - SWAP -";
+    assertEquals("expression: " + s, -3., DoubleStack.interpret(s), delta);
+
+    // "-3. -5. -7. ROT - SWAP DUP * +" peab andma 21.
+    s = "-3. -5. -7. ROT - SWAP DUP * +";
+    assertEquals("expression: " + s, 21., DoubleStack.interpret(s), delta);
+
+    // "9. 11. 17. DUP ROT - SWAP DROP -" peab andma 3.
+    s = "9. 11. 17. DUP ROT - SWAP DROP -";
+    assertEquals("expression: " + s, 3., DoubleStack.interpret(s), delta);
+}
+
+// === SWAP underflow: needs 2 elements ===
+
+@Test(expected = RuntimeException.class)
+public void testSwapUnderflowEmpty() {
+    DoubleStack.interpret("SWAP");
+}
+
+@Test(expected = RuntimeException.class)
+public void testSwapUnderflowOne() {
+    DoubleStack.interpret("5. SWAP");
+}
+
+// === ROT underflow: needs 3 elements ===
+
+@Test(expected = RuntimeException.class)
+public void testRotUnderflowEmpty() {
+    DoubleStack.interpret("ROT");
+}
+
+@Test(expected = RuntimeException.class)
+public void testRotUnderflowOne() {
+    DoubleStack.interpret("5. ROT");
+}
+
+@Test(expected = RuntimeException.class)
+public void testRotUnderflowTwo() {
+    DoubleStack.interpret("5. 3. ROT");
+}
+
+// === DUP underflow: needs 1 element ===
+
+@Test(expected = RuntimeException.class)
+public void testDupUnderflowEmpty() {
+    DoubleStack.interpret("DUP");
+}
+
+// === DROP underflow: needs 1 element ===
+
+@Test(expected = RuntimeException.class)
+public void testDropUnderflowEmpty() {
+    DoubleStack.interpret("DROP");
+}
+
    @Test (timeout=1000)
    public void testNewStack() { 
       DoubleStack m = new DoubleStack();
