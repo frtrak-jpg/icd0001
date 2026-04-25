@@ -76,9 +76,130 @@ public class TnodeTest {
       Tnode t = Tnode.buildFromRPN ("2 5 + -");
    }
 
-  @Test (expected=RuntimeException.class)
+   @Test (expected=RuntimeException.class)
    public void testTooFewNumbers3() {
       Tnode t = Tnode.buildFromRPN ("+");
    }
-}
 
+   // ---- SWAP tests ----
+
+   /** "2 5 SWAP -" must produce "-(5,2)" */
+   @Test (timeout=1000)
+   public void testSwapBasic() {
+      String s = "2 5 SWAP -";
+      Tnode t = Tnode.buildFromRPN (s);
+      String r = t.toString().replaceAll("\\s+", "");
+      assertEquals ("Tree: " + s, "-(5,2)", r);
+   }
+
+   /** SWAP preserves tree structure of the swapped subtrees */
+   @Test (timeout=1000)
+   public void testSwapWithSubtrees() {
+      String s = "2 5 9 ROT + SWAP -";
+      Tnode t = Tnode.buildFromRPN (s);
+      String r = t.toString().replaceAll("\\s+", "");
+      assertEquals ("Tree: " + s, "-(+(9,2),5)", r);
+   }
+
+   // ---- DUP tests ----
+
+   /** "3 DUP *" must produce "*(3,3)" */
+   @Test (timeout=1000)
+   public void testDupBasic() {
+      String s = "3 DUP *";
+      Tnode t = Tnode.buildFromRPN (s);
+      String r = t.toString().replaceAll("\\s+", "");
+      assertEquals ("Tree: " + s, "*(3,3)", r);
+   }
+
+   /** DUP must produce a structurally independent copy */
+   @Test (timeout=1000)
+   public void testDupIndependentCopy() {
+      String s = "2 5 DUP ROT - + DUP *";
+      Tnode t = Tnode.buildFromRPN (s);
+      String r = t.toString().replaceAll("\\s+", "");
+      assertEquals ("Tree: " + s, "*(+(5,-(5,2)),+(5,-(5,2)))", r);
+   }
+
+   // ---- ROT tests ----
+
+   /** "2 5 9 ROT - +" must produce "+(5,-(9,2))" */
+   @Test (timeout=1000)
+   public void testRotBasic() {
+      String s = "2 5 9 ROT - +";
+      Tnode t = Tnode.buildFromRPN (s);
+      String r = t.toString().replaceAll("\\s+", "");
+      assertEquals ("Tree: " + s, "+(5,-(9,2))", r);
+   }
+
+   /** Combined ROT + SWAP example */
+   @Test (timeout=1000)
+   public void testRotAndSwap() {
+      String s = "2 5 9 ROT + SWAP -";
+      Tnode t = Tnode.buildFromRPN (s);
+      String r = t.toString().replaceAll("\\s+", "");
+      assertEquals ("Tree: " + s, "-(+(9,2),5)", r);
+   }
+
+   /** Complex combination: DUP, ROT, SWAP on negative numbers */
+   @Test (timeout=1000)
+   public void testRotSwapDupNegative() {
+      String s = "-3 -5 -7 ROT - SWAP DUP * +";
+      Tnode t = Tnode.buildFromRPN (s);
+      String r = t.toString().replaceAll("\\s+", "");
+      assertEquals ("Tree: " + s, "+(-(-7,-3),*(-5,-5))", r);
+   }
+
+   // ---- Underflow (negative) tests ----
+
+   /** DUP on empty stack must throw */
+   @Test (expected=RuntimeException.class)
+   public void testDupUnderflow() {
+      Tnode t = Tnode.buildFromRPN ("DUP");
+   }
+
+   /** SWAP with only one element must throw */
+   @Test (expected=RuntimeException.class)
+   public void testSwapUnderflow() {
+      Tnode t = Tnode.buildFromRPN ("5 SWAP");
+   }
+
+   /** ROT with only two elements must throw */
+   @Test (expected=RuntimeException.class)
+   public void testRotUnderflow() {
+      Tnode t = Tnode.buildFromRPN ("5 3 ROT");
+   }
+
+   @Test (timeout=1000)
+   public void testDupUnderflowMessage() {
+      try {
+         Tnode.buildFromRPN ("DUP");
+         fail ("DUP on empty stack must throw RuntimeException");
+      } catch (RuntimeException e) {
+         assertTrue (e.getMessage().contains ("operation 'DUP'"));
+         assertTrue (e.getMessage().contains ("requires one subtree"));
+      }
+   }
+
+   @Test (timeout=1000)
+   public void testSwapUnderflowMessage() {
+      try {
+         Tnode.buildFromRPN ("5 SWAP");
+         fail ("SWAP with one subtree must throw RuntimeException");
+      } catch (RuntimeException e) {
+         assertTrue (e.getMessage().contains ("operation 'SWAP'"));
+         assertTrue (e.getMessage().contains ("requires two subtrees"));
+      }
+   }
+
+   @Test (timeout=1000)
+   public void testRotUnderflowMessage() {
+      try {
+         Tnode.buildFromRPN ("5 3 ROT");
+         fail ("ROT with two subtrees must throw RuntimeException");
+      } catch (RuntimeException e) {
+         assertTrue (e.getMessage().contains ("operation 'ROT'"));
+         assertTrue (e.getMessage().contains ("requires three subtrees"));
+      }
+   }
+}

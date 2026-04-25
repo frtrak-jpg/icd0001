@@ -21,6 +21,15 @@ public class Tnode {
       return b.toString();
    }
 
+   /**
+    * Builds an expression tree from a whitespace-separated reverse Polish notation string.
+    * Supported arithmetic operators are +, -, *, / and supported stack operations are
+    * DUP, SWAP and ROT.
+    * Throws RuntimeException with an explanatory message when the input is null, empty,
+    * contains an illegal token, an operation does not have enough subtrees on the stack,
+    * or the expression does not reduce to exactly one root node.
+    */
+
    public static Tnode buildFromRPN (String pol) {
       if (pol == null) {
          throw new RuntimeException ("Invalid RPN: input is null.");
@@ -49,12 +58,44 @@ public class Tnode {
             operatorNode.firstChild = left;
             left.nextSibling = right;
             stack.push (operatorNode);
+         } else if ("DUP".equals (token)) {
+            if (stack.isEmpty()) {
+               throw new RuntimeException (
+                  "Invalid RPN: operation 'DUP' at token #" + (i + 1)
+                     + " requires one subtree, but stack is empty. Expression: '"
+                     + pol + "'.");
+            }
+            stack.push (cloneSubtree (stack.peek()));
+         } else if ("SWAP".equals (token)) {
+            if (stack.size() < 2) {
+               throw new RuntimeException (
+                  "Invalid RPN: operation 'SWAP' at token #" + (i + 1)
+                     + " requires two subtrees, but only " + stack.size()
+                     + " available. Expression: '" + pol + "'.");
+            }
+            Tnode first = stack.pop();
+            Tnode second = stack.pop();
+            stack.push (first);
+            stack.push (second);
+         } else if ("ROT".equals (token)) {
+            if (stack.size() < 3) {
+               throw new RuntimeException (
+                  "Invalid RPN: operation 'ROT' at token #" + (i + 1)
+                     + " requires three subtrees, but only " + stack.size()
+                     + " available. Expression: '" + pol + "'.");
+            }
+            Tnode first = stack.pop();
+            Tnode second = stack.pop();
+            Tnode third = stack.pop();
+            stack.push (second);
+            stack.push (first);
+            stack.push (third);
          } else if (isIntegerToken (token)) {
             stack.push (new Tnode (token));
          } else {
             throw new RuntimeException (
                "Invalid RPN: illegal token '" + token + "' at token #" + (i + 1)
-                  + ". Only integers and operators +, -, *, / are allowed."
+                  + ". Only integers and operations +, -, *, /, DUP, SWAP, ROT are allowed."
                   + " Expression: '" + pol + "'.");
          }
       }
@@ -114,6 +155,21 @@ public class Tnode {
          }
          b.append (")");
       }
+   }
+
+   private static Tnode cloneSubtree (Tnode node) {
+      Tnode clone = new Tnode (node.name);
+      if (node.firstChild != null) {
+         clone.firstChild = cloneSubtree (node.firstChild);
+         Tnode sourceSibling = node.firstChild.nextSibling;
+         Tnode cloneSibling = clone.firstChild;
+         while (sourceSibling != null) {
+            cloneSibling.nextSibling = cloneSubtree (sourceSibling);
+            cloneSibling = cloneSibling.nextSibling;
+            sourceSibling = sourceSibling.nextSibling;
+         }
+      }
+      return clone;
    }
 
    private static boolean isOperator (String token) {

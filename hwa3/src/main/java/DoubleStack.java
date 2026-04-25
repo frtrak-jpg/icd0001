@@ -10,6 +10,7 @@ public class DoubleStack {
    public static void main (String[] argum) {
       // Intentional no-op.
       System.out.println (interpret("2 4 ROT 6 7"));
+   }
 
    DoubleStack() {
       stack = new LinkedList<Double>();
