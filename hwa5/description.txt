@@ -1,0 +1,15 @@
+Write a method buildFromRPN to build a tree from the Reverse Polish Notation of a given integer arithmetic expression (only numbers, '+', '-', '*' and '/' are allowed in the expression), return the root node of the tree.
+Also write the toString method for a tree as the left parenthetic string representation (with round brackets and commas, without spaces). Tree is represented by the root node (this). Tree is a pointer structure with two pointers to link nodes of type Tnode - a pointer to the first child and a pointer to the next sibling.
+Build your test trees and print the results in main-method, do not forget to test a tree that consists of one node only.
+Node name must be non-empty and must not contain round brackets, commas or whitespace symbols.
+In case of an invalid input string the buildFromRPN method must throw a RuntimeException with a meaningful error message (provide full context and cause of an error in user terms).
+
+public static Tnode buildFromRPN (String s)
+
+public String toString()
+
+
+Koostage meetodid täisarvulise "pööratud poola kuju" avaldise (String) järgi puu moodustamiseks (buildFromRPN, tulemuseks puu juurtipp) ning etteantud puu vasakpoolse suluesituse leidmiseks stringina (puu juureks on tipp this, meetod toString tulemust ei trüki, ainult tagastab String-tüüpi väärtuse).
+Testige muuhulgas ka ühetipuline puu. Testpuude moodustamine ja tulemuse väljatrükk olgu peameetodis.  Puu kujutamisviisina kasutage viidastruktuuri (viidad "esimene alluv" firstChild viitab alla esimesele alluvate loetelu elemendile, ja "parem naaber" nextSibling viitab paremale naabrite loetelus järgmisele elemendile; tipu tüüp on Tnode).
+Tipu nimi ei tohi olla tühi ega sisaldada ümarsulge, komasid või tühisümboleid. Kui meetodile buildFromRPN etteantav sõne on vigane, siis tuleb tekitada asjakohase veateatega RuntimeException (veateates peavad sisalduma nii vea põhjus kasutaja terminites kui ka vea põhjustanud sõne tervikuna).
+

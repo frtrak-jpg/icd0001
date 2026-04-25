@@ -9,7 +9,7 @@ public class DoubleStack {
 
    public static void main (String[] argum) {
       // Intentional no-op.
-   }
+      System.out.println (interpret("2 4 ROT 6 7"));
 
    DoubleStack() {
       stack = new LinkedList<Double>();
@@ -145,7 +145,22 @@ public class DoubleStack {
             }
             stack.op (token);
          } else if (isStackWordToken (token)) {
-            applyStackWord (stack, token, expression);
+      
+         try {
+            if ("SWAP".equals (token)) {
+               stack.swap();
+            } else if ("ROT".equals (token)) {
+               stack.rot();
+            } else if ("DUP".equals (token)) {
+               stack.dup();
+            } else if ("DROP".equals (token)) {
+               stack.drop();
+            }
+         } catch (RuntimeException e) {
+            throw new RuntimeException (
+               "interpret: " + e.getMessage() + " for operation '" + token +
+               "' in expression: '" + expression + "'");
+         }
          } else {
             try {
                double value = Double.parseDouble (token);
@@ -179,24 +194,8 @@ public class DoubleStack {
          || "DUP".equals (token) || "DROP".equals (token);
    }
 
-   private static void applyStackWord (DoubleStack stack, String token,
-      String expression) {
-      try {
-         if ("SWAP".equals (token)) {
-            stack.swap();
-         } else if ("ROT".equals (token)) {
-            stack.rot();
-         } else if ("DUP".equals (token)) {
-            stack.dup();
-         } else if ("DROP".equals (token)) {
-            stack.drop();
-         }
-      } catch (RuntimeException e) {
-         throw new RuntimeException (
-            "interpret: " + e.getMessage() + " for operation '" + token +
-            "' in expression: '" + expression + "'");
-      }
-   }
+   
+      
 
 }
 
