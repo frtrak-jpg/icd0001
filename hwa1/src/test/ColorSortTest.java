@@ -1,4 +1,6 @@
 import static org.junit.Assert.*;
+
+import main.java.ColorSort;
 import org.junit.Test;
 
 public class ColorSortTest {
