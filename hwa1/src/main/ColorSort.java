@@ -1,9 +1,11 @@
+package main.java;
+
 /** Sorting of balls.
  * @since 1.8
  */
 public class ColorSort {
 
-   enum Color {red, green, blue};
+   public enum Color {red, green, blue};
    
    public static void main (String[] param) {
       // for debugging

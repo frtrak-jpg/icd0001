@@ -1,3 +1,5 @@
+package main.java;
+
 import java.util.*;
 
 /** Stack manipulation.
@@ -12,7 +14,7 @@ public class DoubleStack {
       System.out.println (interpret("2 4 ROT 6 7"));
    }
 
-   DoubleStack() {
+   public DoubleStack() {
       stack = new LinkedList<Double>();
    }
 

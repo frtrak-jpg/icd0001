@@ -1,3 +1,4 @@
+package test.java;
 
 /** Helper methods.
  *   Arrays converted to array expressions (toString(...)) 

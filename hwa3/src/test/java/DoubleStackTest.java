@@ -1,5 +1,8 @@
+package test.java;
 
 import static org.junit.Assert.*;
+
+import main.java.DoubleStack;
 import org.junit.Test;
 
 /** Testklass.

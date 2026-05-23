@@ -129,7 +129,7 @@ public class Tnode {
    public static void main (String[] param) {
       String[] samples = {
          "1 2 +",
-         "2 1 - 4 * 6 3 / +",
+         "2 SWAP - 4 * 6 3 / +",
          "5"
       };
 

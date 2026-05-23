@@ -269,9 +269,7 @@ public class GraphTask {
       public void createRandomSimpleGraph (int n, int m) {
          if (n <= 0)
             return;
-         if (n > 2500)
-            throw new IllegalArgumentException ("Too many vertices: " + n);
-         if (m < n-1 || m > n*(n-1)/2)
+         if (m < n-1 || m > (long)n*(n-1)/2)
             throw new IllegalArgumentException
                ("Impossible number of edges: " + m);
          first = null;
@@ -280,24 +278,35 @@ public class GraphTask {
          Vertex v = first;
          int c = 0;
          while (v != null) {
+            v.info = c;
             vert[c++] = v;
             v = v.next;
          }
-         int[][] connected = createAdjMatrix();
+         // Use a HashSet to track existing edges (O(m) memory, works for large n)
+         Set<Long> connected = new HashSet<>();
+         for (Vertex u : vert) {
+            Arc a = u.first;
+            while (a != null) {
+               int i = u.info;
+               int j = a.target.info;
+               connected.add ((long) Math.min (i, j) * n + Math.max (i, j));
+               a = a.next;
+            }
+         }
          int edgeCount = m - n + 1;  // remaining edges
          while (edgeCount > 0) {
             int i = (int)(Math.random()*n);  // random source
             int j = (int)(Math.random()*n);  // random target
-            if (i==j)
+            if (i == j)
                continue;  // no loops
-            if (connected [i][j] != 0 || connected [j][i] != 0)
+            long key = (long) Math.min (i, j) * n + Math.max (i, j);
+            if (connected.contains (key))
                continue;  // no multiple edges
+            connected.add (key);
             Vertex vi = vert [i];
             Vertex vj = vert [j];
             Arc f = createArc ("a" + vi.toString() + "_" + vj.toString(), vi, vj);
-            connected [i][j] = 1;
             Arc b = createArc ("a" + vj.toString() + "_" + vi.toString(), vj, vi);
-            connected [j][i] = 1;
             f.twin = b;
             b.twin = f;
             edgeCount--;  // a new edge happily created
@@ -530,10 +539,15 @@ public class GraphTask {
       System.out.println ();
 
       // -- Suure mahuga test (>= 2000 tippu) ---------------------------
-      System.out.println ("==== Suuremahulised testid (>= 2000 tippu) ====");
-      bigTest (2200, 5000);
-      bigTest (2200, 2199);   // puu: kõik servad sillad
-      bigTest (2500, 6000);
+      System.out.println ("==== Suuremahulised testid (kuni 20000 tippu) ====");
+      bigTest (2200,  5000);
+      bigTest (2200,  2199);   // puu: kõik servad sillad
+      bigTest (5000, 12000);
+      bigTest (5000,  4999);   // puu
+      bigTest (10000, 25000);
+      bigTest (10000,  9999);  // puu
+      bigTest (20000, 50000);
+      bigTest (20000, 19999);  // puu: kõik servad sillad
    }
 
    /** Käivita tavaline test, mis trükib graafi (kui pole liiga suur),
